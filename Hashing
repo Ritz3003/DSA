@@ -1,0 +1,34 @@
+#Hashing is a technique in DSA that helps you store, find, and retrieve data quickly. It is especially useful for problems involving duplicates, frequencies, searching, and pairs.
+
+#Hashing ka matlab Yaad Rakhna.
+
+#Where is hashing used in DSA interviews?
+- Frequency counting: Count occurrences of elements.
+- Duplicates: Find repeated numbers.
+- Two Sum: Quickly check whether a required complement exists.
+- Anagrams: Compare character frequencies.
+- Longest consecutive sequence: Check whether numbers exist in a set.
+- Subarray Sum Equals K: Store prefix-sum frequencies.
+
+#Golden Rule: Ask yourself, "Am I repeatedly searching for something, counting something, or checking whether something exists?"
+
+If yes, consider hashing as a possible approach.
+
+#Hashing keyword recognition sheet
+
+| If the question says… | Think of… | Why? |
+|---|---|---|
+| Frequency / count occurrences | `HashMap` | Store element → count |
+| Duplicate / repeated elements | `HashSet` or `HashMap` | Detect previously seen elements or count repetitions |
+| Check whether an element appeared before | `HashSet` | Track elements already visited |
+| Unique / distinct elements | `HashSet` | Store each value only once |
+| Find a pair that sums to a target | `HashMap` or `HashSet` | Look for the required complement |
+| Anagram / same character frequencies | `HashMap` or array | Compare character frequencies |
+| Count characters | `HashMap` or array | Store character → count |
+| First non-repeating character | `HashMap` | Count occurrences, then find the first character with count `1` |
+| Two arrays: common elements / intersection | `HashSet` or `HashMap` | Check membership efficiently |
+| Subarray sum equals K | `HashMap` of prefix sums | Count or find previously seen prefix sums |
+| Longest consecutive sequence | `HashSet` | Check whether neighboring values exist |
+| Group words by anagram | `HashMap` | Group words using a common signature |
+
+
