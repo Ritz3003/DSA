@@ -40,3 +40,19 @@ class Solution {
         
     }
 }
+
+/**
+
+### Concept: Company ki speed slowest worker par depend karti hai
+
+- `balloon` banane ke liye `b, a, l, l, o, o, n` chahiye.
+- Har character ka count nikaalenge ki available kitne hain.
+- `l` aur `o` ko 2 baar chahiye, isliye unke count ko `2` se divide karenge.
+- Har character kitne balloons bana sakta hai, woh calculate karenge.
+- Jo character sabse kam balloons banane dega, wahi answer hoga.
+- Isliye sabhi counts mein se minimum nikaalenge: `min(counts)`.
+
+Yaad rakhna: Company ki speed slowest worker decide karta hai; waise hi maximum balloons sabse limited character decide karta hai.
+
+
+ */
