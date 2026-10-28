@@ -87,3 +87,177 @@ What matters in interviews
 - A frequency map is not a separate Java class; it is a use of HashMap.
 - LinkedHashMap maintains encounter/insertion order under ordinary insertion-order configuration.
 - TreeMap is tree-based, not a hash table. Its basic lookup and update operations are typically \(O(\log n)\).
+
+Hashing patterns and variations
+These six patterns cover a large share of foundational hashing questions.
+Pattern 1 — Frequency counting
+Recognition: frequency, occurrences, most frequent, first unique character.
+
+Intuition: Instead of scanning the array again to count each element, count all elements in one pass.
+
+Store: value → frequency.
+Map<Integer, Integer> freq = new HashMap<>();
+
+for (int num : nums) {
+    freq.merge(num, 1, Integer::sum);
+}
+Representative problem: Majority Element — LeetCode 169.
+
+Representative problem: Majority Element — LeetCode 169.
+Pattern 2 — Membership and duplicate detection
+Recognition: duplicate, distinct, already seen, membership.
+
+Intuition: Remember the values encountered so far. If the current value is already present, you have found a duplicate.
+
+Store: each seen value.
+Set<Integer> seen = new HashSet<>();
+
+for (int num : nums) {
+    if (!seen.add(num)) {
+        // Duplicate found
+    }
+}
+
+
+Why does this work? add() returns false if the value was already present.
+
+Representative problem: Contains Duplicate — LeetCode 217.
+Pattern 3 — Complement lookup
+Recognition: pair sum, target value, find the other element.
+
+Intuition: If the current value is \(x\) and the target is \(T\), the required partner is \(T-x\).
+
+Store: previously seen value → index.
+Map<Integer, Integer> indexMap = new HashMap<>();
+
+for (int i = 0; i < nums.length; i++) {
+    int need = target - nums[i];
+
+    if (indexMap.containsKey(need)) {
+        // Partner found
+    }
+
+    indexMap.put(nums[i], i);
+}
+
+
+Representative problem: Two Sum — LeetCode 1.
+
+Pattern 4 — Grouping by key
+Recognition: anagrams, categories, equivalent representations.
+
+Intuition: Different inputs that belong to the same group should produce the same key.
+
+For anagrams, sorting each word's characters creates a canonical key: "eat", "tea", and "ate" all become "aet".
+
+Store: canonical key → list of matching values.
+Map<String, List<String>> groups = new HashMap<>();
+
+for (String word : words) {
+    char[] chars = word.toCharArray();
+    Arrays.sort(chars);
+
+    String key = new String(chars);
+
+    groups.computeIfAbsent(key, k -> new ArrayList<>())
+          .add(word);
+}
+
+
+Representative problem: Group Anagrams — LeetCode 49.
+Pattern 5 — Prefix sum + HashMap
+Recognition: count contiguous subarrays whose sum equals a target.
+
+Intuition: Let the current prefix sum be \(P\). If an earlier prefix sum was \(P-T\), the elements between those prefixes sum to \(T\).
+
+Store: prefix sum → number of times it has occurred.
+Map<Long, Integer> freq = new HashMap<>();
+freq.put(0L, 1);
+
+long prefix = 0;
+int count = 0;
+
+for (int num : nums) {
+    prefix += num;
+
+    count += freq.getOrDefault(prefix - target, 0);
+    freq.merge(prefix, 1, Integer::sum);
+}
+
+
+The initial 0 → 1 represents the empty prefix. It allows a subarray starting at index 0 to be counted.
+
+Representative problem: Subarray Sum Equals K — LeetCode 560.
+Pattern 6 — Mapping relationships and seen-state tracking
+Recognition: remember previous states, enforce one-to-one mappings, track visited values.
+
+Intuition: A key may represent more than a number. It can identify a previously encountered state, mapping, or relationship.
+
+Store: the state needed by the next decision.
+
+For example, a one-to-one mapping between characters in two strings:
+Map<Character, Character> mapping = new HashMap<>();
+
+mapping.put('a', 'x');
+mapping.put('b', 'y');
+
+
+For a true one-to-one relationship, you must also ensure that two different source characters cannot map to the same destination character; a reverse map or equivalent tracking may be necessary.
+
+Representative problem: Isomorphic Strings — LeetCode 205.
+
+NOTE: Group Anagrams	TC \(O(nklog k)\) with sorting keys	 SC \(O(nk)\).
+
+Golden rule
+Whenever a problem makes you repeatedly search for information you have already encountered, ask whether storing that information can eliminate the repeated work.
+
+# Data Structures & Algorithms: Hash Table & Set Patterns
+
+## Problems to Learn
+
+Study these solutions deeply. For every problem, understand the brute-force approach, the information stored, why the lookup works, and the edge cases.
+
+| Pattern | Problem | Difficulty | Why Learn |
+| :--- | :--- | :---: | :--- |
+| **Frequency counting** | [Majority Element — 169](https://leetcode.com/problems/majority-element/) | `Easy` | Frequency and counting intuition |
+| **Membership** | [Contains Duplicate — 217](https://leetcode.com/problems/contains-duplicate/) | `Easy` | Set-based lookup |
+| **Complement lookup** | [Two Sum — 1](https://leetcode.com/problems/two-sum/) | `Easy` | Value-to-index mapping |
+| **Grouping by key** | [Group Anagrams — 49](https://leetcode.com/problems/group-anagrams/) | `Medium` | Canonical keys |
+| **Prefix sum + map** | [Subarray Sum Equals K — 560](https://leetcode.com/problems/subarray-sum-equals-k/) | `Medium` | Prefix-sum frequency counting |
+| **Seen-state tracking** | [Isomorphic Strings — 205](https://leetcode.com/problems/isomorphic-strings/) | `Easy` | One-to-one mappings |
+| **Set membership** | [Longest Consecutive Sequence — 128](https://leetcode.com/problems/longest-consecutive-sequence/) | `Medium` | Membership plus efficient sequence detection |
+
+> [!IMPORTANT]
+> **Learning Rule:** Do not move on just because you understood the explanation. Close the solution and reproduce the logic yourself.
+
+---
+
+## Practice Problems
+
+These are separate from the Learn list. No solutions or hints are included.
+
+### Easy
+
+| Problem | LeetCode ID | Direct Link |
+| :--- | :---: | :--- |
+| **Valid Anagram** | `242` | [Problem 242](https://leetcode.com/problems/valid-anagram/) |
+| **Intersection of Two Arrays** | `349` | [Problem 349](https://leetcode.com/problems/intersection-of-two-arrays/) |
+| **Happy Number** | `202` | [Problem 202](https://leetcode.com/problems/happy-number/) |
+
+### Medium
+
+| Problem | LeetCode ID | Direct Link |
+| :--- | :---: | :--- |
+| **Top K Frequent Elements** | `347` | [Problem 347](https://leetcode.com/problems/top-k-frequent-elements/) |
+| **4Sum II** | `454` | [Problem 454](https://leetcode.com/problems/4sum-ii/) |
+| **Find All Anagrams in a String** | `438` | [Problem 438](https://leetcode.com/problems/find-all-anagrams-in-a-string/) |
+| **Contiguous Array** | `525` | [Problem 525](https://leetcode.com/problems/contiguous-array/) |
+| **Longest Substring Without Repeating Characters** | `3` | [Problem 3](https://leetcode.com/problems/longest-substring-without-repeating-characters/) |
+| **Design Underground System** | `1396` | [Problem 1396](https://leetcode.com/problems/design-underground-system/) |
+
+### Hard
+
+| Problem | LeetCode ID | Direct Link |
+| :--- | :---: | :--- |
+| **Substring with Concatenation of All Words** | `30` | [Problem 30](https://leetcode.com/problems/substring-with-concatenation-of-all-words/) |
+| **Count of Range Sum** | `327` | [Problem 327](https://leetcode.com/problems/count-of-range-sum/) |
