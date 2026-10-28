@@ -1,34 +1,89 @@
-#Hashing is a technique in DSA that helps you store, find, and retrieve data quickly. It is especially useful for problems involving duplicates, frequencies, searching, and pairs.
+Without hashing  -> Array scan --> Search repeatedly → O(n) per search
+With hashing --> Hash table --> Store once, look up efficiently → O(1) average per operation
+Java collections
+- HashSet: Stores unique elements.
+- HashMap: Stores key-value pairs.
+- Frequency map: A HashMap used to count occurrences. 
 
-#Hashing ka matlab Yaad Rakhna.
+2. Core intuition: What should I store?
+Consider the array [2, 7, 2, 5, 7, 2].
 
-#Where is hashing used in DSA interviews?
-- Frequency counting: Count occurrences of elements.
-- Duplicates: Find repeated numbers.
-- Two Sum: Quickly check whether a required complement exists.
-- Anagrams: Compare character frequencies.
-- Longest consecutive sequence: Check whether numbers exist in a set.
-- Subarray Sum Equals K: Store prefix-sum frequencies.
-
-#Golden Rule: Ask yourself, "Am I repeatedly searching for something, counting something, or checking whether something exists?"
-
-If yes, consider hashing as a possible approach.
-
-#Hashing keyword recognition sheet
-
-| If the question says… | Think of… | Why? |
-|---|---|---|
-| Frequency / count occurrences | `HashMap` | Store element → count |
-| Duplicate / repeated elements | `HashSet` or `HashMap` | Detect previously seen elements or count repetitions |
-| Check whether an element appeared before | `HashSet` | Track elements already visited |
-| Unique / distinct elements | `HashSet` | Store each value only once |
-| Find a pair that sums to a target | `HashMap` or `HashSet` | Look for the required complement |
-| Anagram / same character frequencies | `HashMap` or array | Compare character frequencies |
-| Count characters | `HashMap` or array | Store character → count |
-| First non-repeating character | `HashMap` | Count occurrences, then find the first character with count `1` |
-| Two arrays: common elements / intersection | `HashSet` or `HashMap` | Check membership efficiently |
-| Subarray sum equals K | `HashMap` of prefix sums | Count or find previously seen prefix sums |
-| Longest consecutive sequence | `HashSet` | Check whether neighboring values exist |
-| Group words by anagram | `HashMap` | Group words using a common signature |
+The same input can produce different hash structures depending on the question.
+A · Existence
+Question: Have I seen 7?
+Set<Integer> seen = new HashSet<>();
+seen.add(2);
+seen.add(7);
+seen.add(5);
+Store the value itself. You only need to know whether it exists.
 
 
+B · Frequency
+Question: How many times does 2 occur?
+2 → 3
+7 → 2
+5 → 1
+Store value → count.
+
+
+C · Index lookup
+Question: Where did I last see 7?
+2 → 5
+7 → 4
+5 → 3
+Store value → index. These indices are illustrative zero-based positions from the input.
+
+
+ D · Relationship
+Question: Which group does this word belong to?
+"eat" → "aet"
+"tea" → "aet"
+Store a canonical key → related values. This is useful for grouping anagrams.
+
+3. First elimination question ⭐
+When you see an unfamiliar DSA problem, ask yourself:
+What information from the elements I have already processed would help me answer the current question without searching everything again?
+
+Do not immediately decide to use a HashMap. First identify the repeated work.
+| Problem requirement | What to remember | Likely structure |
+| :--- | :--- | :--- |
+| Check whether a value exists | Seen values | `HashSet` |
+| Count occurrences | Value $\rightarrow$ count | `HashMap` |
+| Detect duplicates | Previously seen values | `HashSet` |
+| Find a complementary value | Value $\rightarrow$ index or count | `HashMap` |
+| Find something seen earlier | Value $\rightarrow$ relevant state | `HashMap` / `HashSet` |
+| Group related items | Group key $\rightarrow$ collection | `HashMap` |
+| Count subarrays with a target sum | Prefix sum $\rightarrow$ frequency | `HashMap` |
+
+
+Problem requirement
+       │
+       ▼
+What information must I remember?
+       │
+       ▼
+Choose HashSet, HashMap, or another structure
+       │
+       ▼
+Can storing this information eliminate repeated work?
+       ├─► YES ──► Hashing may be useful
+       └─► NO  ──► Consider Sorting, Two Pointers, Binary Search, or Array Indexing
+
+
+The key insight: the data structure is not the solution by itself. The information you choose to store is what solves the problem.
+
+
+| Structure | Best use | Common operations |
+| :--- | :--- | :--- |
+| `HashSet` | Uniqueness, membership | `add()`, `contains()`, `remove()` |
+| `HashMap` | Key $\rightarrow$ value lookup | `put()`, `get()`, `containsKey()` |
+| Frequency map | Count occurrences | `getOrDefault()`, `merge()` |
+| `LinkedHashMap` | Preserve insertion order | `put()`, `get()`, `containsKey()` |
+| `TreeMap` | Maintain sorted keys | `put()`, `get()`, `firstKey()` |
+
+What matters in interviews
+- HashSet stores unique values; duplicate insertions do not create additional entries.
+- HashMap associates each key with one current value. If a key is inserted again, its value is replaced.
+- A frequency map is not a separate Java class; it is a use of HashMap.
+- LinkedHashMap maintains encounter/insertion order under ordinary insertion-order configuration.
+- TreeMap is tree-based, not a hash table. Its basic lookup and update operations are typically \(O(\log n)\).
