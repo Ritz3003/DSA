@@ -1,4 +1,6 @@
 Prefix Sum + HashMap Patterns ( 7 problems )
+
+
 Prefix Sum + Hashmap Approach
 We can apply this approach in problems related to Subarrays, problems where we are asked to
 
@@ -37,11 +39,46 @@ Condition : Sum of subarray equals k
 Negative values ALLOWED in Input
 
 Code
+/*Given an array of integers arr and an integer k,
+return the total number of subarrays whose sum equals to k.*/
+class Solution {
+public:
+    int subarraySum(vector<int>& arr, int k) {
+        int count = 0;
+        int sum = 0;
+        unordered_map<int, int> mp;
+        mp.insert({0, 1});
+        for (int it : arr) {
+            sum += it;
+            count += mp[sum - k];
+            mp[sum]++; 
+        }
+        return count;
+    }
+};
 ✏️Problem 1.2 --> 974. Count Subarray Sums Divisible by K
 Condition : Subarrays that have a sum divisible by k.
 Negative values ALLOWED in Input
 
 Code
+class Solution {
+public:
+    int subarraysDivByK(vector<int>& nums, int k) {
+        int n = nums.size();
+        int count = 0;
+        int sum = 0;
+        unordered_map<int, int> mp;
+        mp[0] = 1;
+        for (int i : nums) {
+            sum = (sum + i) % k;
+            if (sum < 0)
+                sum = sum + k; // ADD k if sum negative to make it positive
+            count += mp[sum];
+            mp[sum]++;
+        }
+        return count;
+    }
+};
 ✏️Problem 1.3--> 930. Count Binary Subarrays with given SUM
 Condition : (Binary)Subarrays with given Sum
 
@@ -50,6 +87,23 @@ Negative values are not allowed in input. Because of this reason, we can also so
 Sliding window is only applicable when we know for sure if the prefixsum is an increasing or decreasing function(i.e. Monotonous in nature)
 
 Code
+/*Given a binary array nums and an integer goal, 
+return the number of non-empty subarrays with a sum goal.*/
+class Solution {
+public:
+    int numSubarraysWithSum(vector<int>& nums, int goal) {
+        int count = 0;
+        int sum = 0;
+        unordered_map<int, int> mp;
+        mp.insert({0, 1});
+        for (int it : nums) {
+            sum += it; 
+            count += mp[sum - goal];
+            mp[sum]++; 
+        }
+        return count;
+    }
+};
 2. Maximum length Subarray with given condition
 Data Structures needed :
 
@@ -60,6 +114,27 @@ Map Initialisation : mp[0]=-1 Here we are dealing with index that's why we inita
 Condition : Binary Subarray with an equal number of 0 and 1
 
 Code
+/*Given a binary array nums, return the maximum length
+of a subarray with an equal number of 0 and 1*/
+class Solution {
+public:
+    int findMaxLength(vector<int>& nums) {
+        int ans=0;
+        unordered_map<int,int>mp;
+        mp[0]=-1;
+        int one=0,zero=0;
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]==0)zero++;
+            else one++;
+            int diff=zero-one;
+            if(mp.count(diff))
+                ans=max(ans,i-mp[diff]);
+            else
+                mp[diff]=i;
+        } 
+        return ans;
+    }
+};
 ✏️Problem 2.2 --> 325.Maximum Size Subarray Sum Equals k (Premium)]
 Problem is Available on other Platforms.
 
