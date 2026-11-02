@@ -1,0 +1,165 @@
+Prefix Sum + HashMap Patterns ( 7 problems )
+Prefix Sum + Hashmap Approach
+We can apply this approach in problems related to Subarrays, problems where we are asked to
+
+Count the subarrays with some condition
+Find Maximum Length Subarray with some condition
+Check if subarray exists with some given condition
+Mainly the problems dealing with Subarray sum .
+
+Approach works on the following principle
+
+If the prefix sum up to ith index is X, and the
+prefix sum up to jth index is Y and
+it is found that Y = X +k, then the required subarray is found with i as start index and j as end index.
+
+To store the index value and the sum of elements up to that index a hashmap can be used.
+
+Why we need this approach of Hashmap +Prefix Sum ?
+So basically for subarray related problems Brute Force method takes O(n^2) time to process each subarray + extra time in processing .
+But with this approach only O(n) time is taken .
+Now you might wonder that what is stopping you from using Sliding window approach for such problems
+
+Sliding window is only applicable when we know for sure if the prefixsum is an increasing or decreasing function(i.e. Monotonous in nature)
+
+So for problems where negative input is given this approach of PrefixSum + Hashmap is the best way to solve such problems.
+
+1. Count Subarrays with some given condtion
+Data Structures needed :
+
+Integer Variable for cumulative sum
+Unordered Map
+Map Initialisation : mp[0]=1
+Lets solve 3 problems using Prefix Sum + Hashmap pattern
+
+✏️Problem 1.1 --> 560. Count Subarray sum equals k
+Condition : Sum of subarray equals k
+Negative values ALLOWED in Input
+
+Code
+✏️Problem 1.2 --> 974. Count Subarray Sums Divisible by K
+Condition : Subarrays that have a sum divisible by k.
+Negative values ALLOWED in Input
+
+Code
+✏️Problem 1.3--> 930. Count Binary Subarrays with given SUM
+Condition : (Binary)Subarrays with given Sum
+
+Negative values are not allowed in input. Because of this reason, we can also solve this problem using Sliding window too.
+
+Sliding window is only applicable when we know for sure if the prefixsum is an increasing or decreasing function(i.e. Monotonous in nature)
+
+Code
+2. Maximum length Subarray with given condition
+Data Structures needed :
+
+Integer Variable for cumulative sum
+Unordered Map
+Map Initialisation : mp[0]=-1 Here we are dealing with index that's why we initalize it to -1
+✏️Problem 2.1 --> 525.Contiguous Array
+Condition : Binary Subarray with an equal number of 0 and 1
+
+Code
+✏️Problem 2.2 --> 325.Maximum Size Subarray Sum Equals k (Premium)]
+Problem is Available on other Platforms.
+
+Problem Statement : Given an array nums and a target value k, find the maximum length of a subarray that sums to k. If there isn't one, return 0 instead.
+
+Condition: subarray that sums to k
+
+Negative values ALLOWED in Input
+
+Code
+//arguments of this code might differ
+//from  leetcode version of this problem but
+//the idea reamins same
+int lenOfLongSubarr(int A[],  int N, int K)  { 
+        int pre_sum = 0; //prefix sum
+        int res = 0;
+        unordered_map<int, int> mp; //{pref sum , index}
+        mp[0] = -1; 
+        for(int i = 0; i < N; i++) {
+            pre_sum += A[i];
+            if(mp.find(pre_sum - K) != mp.end()) // pre_sum - K found in hash
+                res = max(res, i - mp[pre_sum - K]);
+            if(mp.find(pre_sum) == mp.end()) // Check if prefix_sum exists in hash
+                mp[pre_sum] = i;
+        }
+        return res;
+    } 
+
+};
+✏️Problem 2.3 -->1658. Minimum Operations to Reduce X to Zero
+Problem Reduced to Above problem of Maximum size subarray sum
+
+Code
+/*given an integer array nums and an integer x.
+In one operation, you can either remove the leftmost
+or the rightmost element from the array nums
+and subtract its value from x
+Return the minimum number of operations
+to reduce x to exactly 0 if it is possible, otherwise, return -1.*/
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int x) {//start 
+        int n = nums.size();
+        int total = accumulate(nums.begin(), nums.end(), 0);
+        int rem = total - x;
+        if (rem == 0)
+            return nums.size();
+
+        int length = maxSubArrayLen(rem, nums);
+
+        if (length == 0)
+            return -1;
+        return n - length;
+    }
+
+    int maxSubArrayLen(int k, vector<int>& A) {//Code for Maximum size subarray given sum
+        int sum = 0;
+        int res = 0;
+        unordered_map<int, int> mp; 
+        mp[0] = -1;
+
+        for (int i = 0; i < A.size(); i++) {
+            sum += A[i];
+            if (mp.find(sum - k) != mp.end())
+                res = max(res, i - mp[sum - k]);
+
+            if (mp.find(sum) == mp.end())
+                mp[sum] = i;
+        }
+        return res;
+    }
+};
+3. Check if a subarray exists with given condition
+✏️Problem 3.1 --> 523. Continuous Subarray Sum
+Given an integer array nums and an integer k, return true if nums has a good subarray or false otherwise.
+
+Conditions: Length of subarray is at least two
+The sum of the elements of the subarray is a multiple of k
+
+Why sliding window not applicable here despite positive input?
+We need to check if the sum of the subarray is a multiple of k, which adds complexity to the problem. We can't determine this condition by simply adjusting the window size. if instead of modulo the sum was asked to be compared then we can form a logic to decrement or increment window size
+
+Code
+class Solution {
+public:
+    bool checkSubarraySum(vector<int>& nums, int k) {
+        unordered_map<int,int>mp;
+        mp[0]=-1;
+        //sum of the elements of the subarray is a multiple of k
+        int sum=0;
+        for(int i=0;i<nums.size();i++){
+            sum+=nums[i];
+            if(mp.find(sum%k)!=mp.end()){
+                if(i-mp[sum%k]>=2)
+                    return true;
+            }
+            else
+                mp[sum%k]=i;
+        }
+        return false;
+
+    }
+};
