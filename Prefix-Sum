@@ -116,25 +116,22 @@ Condition : Binary Subarray with an equal number of 0 and 1
 Code
 /*Given a binary array nums, return the maximum length
 of a subarray with an equal number of 0 and 1*/
-class Solution {
-public:
-    int findMaxLength(vector<int>& nums) {
-        int ans=0;
-        unordered_map<int,int>mp;
-        mp[0]=-1;
-        int one=0,zero=0;
-        for(int i=0;i<nums.size();i++){
-            if(nums[i]==0)zero++;
-            else one++;
-            int diff=zero-one;
-            if(mp.count(diff))
-                ans=max(ans,i-mp[diff]);
-            else
-                mp[diff]=i;
-        } 
-        return ans;
+public int findMaxLength(int[] nums) {
+    Map<Integer, Integer> mp = new HashMap<>();
+    mp.put(0, -1);
+    int sum = 0, best = 0;
+
+    for (int i = 0; i < nums.length; i++) {
+        sum += (nums[i] == 1) ? 1 : -1;
+
+        if (mp.containsKey(sum)) {
+            best = Math.max(best, i - mp.get(sum));
+        } else {
+            mp.put(sum, i);
+        }
     }
-};
+    return best;
+}
 ✏️Problem 2.2 --> 325.Maximum Size Subarray Sum Equals k (Premium)]
 Problem is Available on other Platforms.
 
