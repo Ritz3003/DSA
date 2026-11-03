@@ -62,23 +62,21 @@ Negative values ALLOWED in Input
 
 Code
 class Solution {
-public:
-    int subarraysDivByK(vector<int>& nums, int k) {
-        int n = nums.size();
-        int count = 0;
-        int sum = 0;
-        unordered_map<int, int> mp;
-        mp[0] = 1;
-        for (int i : nums) {
-            sum = (sum + i) % k;
-            if (sum < 0)
-                sum = sum + k; // ADD k if sum negative to make it positive
-            count += mp[sum];
-            mp[sum]++;
+    public int subarraysDivByK(int[] nums, int k) {
+        int[] count = new int[k];
+        count[0] = 1;
+        int sum = 0, ans = 0;
+
+        for (int num : nums) {
+            sum += num;
+            int r = ((sum % k) + k) % k;
+
+            ans += count[r];
+            count[r]++;
         }
-        return count;
+        return ans;
     }
-};
+}
 ✏️Problem 1.3--> 930. Count Binary Subarrays with given SUM
 Condition : (Binary)Subarrays with given Sum
 
